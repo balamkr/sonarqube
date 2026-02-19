@@ -13,6 +13,7 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v4
         with:
+          # Required for SonarQube to see code history
           fetch-depth: 0
 
       - name: Set up JDK 21
@@ -22,7 +23,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build and Package
-        # We use -f to point to the nested pom.xml and skip checkstyle/tests
+        # -f points Maven to the correct subdirectory 'sonarqube'
         run: |
           mvn clean verify \
             -f sonarqube/pom.xml \
