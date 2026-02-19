@@ -21,16 +21,16 @@ jobs:
           distribution: 'temurin'
 
       - name: Make Maven Wrapper Executable
-        # We target the specific folder where mvnw lives
+        # This targets the subfolder where your mvnw file lives
         run: chmod +x ./spring-petclinic/mvnw
 
       - name: Build and Package
-        # We tell Maven to run inside the subfolder
+        # Run inside the subfolder to find pom.xml
         run: ./mvnw clean verify -DskipTests
         working-directory: ./spring-petclinic
 
       - name: Run SonarQube analysis
-        # We run the scanner inside the subfolder so it finds the pom.xml
+        # Run inside the subfolder to find pom.xml
         run: ./mvnw sonar:sonar \
           -Dsonar.projectKey=Test-Project-Bala \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
