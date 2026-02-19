@@ -1,0 +1,32 @@
+name: SonarQube Analysis
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Make Maven Wrapper Executable
+        # Since mvnw is now in the root, we don't need the subfolder path
+        run: chmod +x mvnw
+
+      - name: Build and Package
+        run: ./mvnw clean verify -DskipTests
+
+      - name: Run SonarQube analysis
+        run: ./mvnw sonar:sonar \
+          -Dsonar.projectKey=Test-Project-Bala \
+          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+          -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+          -DskipTests
