@@ -2,11 +2,12 @@ name: SonarQube Analysis
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ] # Note: Your status says branch 'master', not 'main'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out the repository
         uses: actions/checkout@v4
@@ -18,7 +19,6 @@ jobs:
           distribution: 'temurin'
 
       - name: Make Maven Wrapper Executable
-        # Since mvnw is now in the root, we don't need the subfolder path
         run: chmod +x mvnw
 
       - name: Build and Package
