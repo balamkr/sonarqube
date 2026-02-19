@@ -23,7 +23,7 @@ jobs:
         run: mvn clean verify
 
       - name: Run SonarQube analysis
-        run: mvn sonar:sonar \
+        run: ./mvnw sonar:sonar \
           -Dsonar.projectKey=Test-Project-Bala \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
           -Dsonar.token=${{ secrets.SONAR_TOKEN }}
