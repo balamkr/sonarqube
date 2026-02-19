@@ -2,7 +2,8 @@ name: SonarQube Analysis
 
 on:
   push:
-    branches: [ "master" ] # Note: Your status says branch 'master', not 'main'
+    branches: [ "main" ]
+  pull_request:
 
 jobs:
   build:
@@ -18,15 +19,12 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Make Maven Wrapper Executable
-        run: chmod +x mvnw
-
-      - name: Build and Package
-        run: ./mvnw clean verify -DskipTests
+      - name: Build and test with Maven
+        run: mvn clean verify
 
       - name: Run SonarQube analysis
-        run: ./mvnw sonar:sonar \
+        run: mvn sonar:sonar \
           -Dsonar.projectKey=Test-Project-Bala \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-          -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
-          -DskipTests
+          -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+
