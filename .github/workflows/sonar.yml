@@ -21,16 +21,19 @@ jobs:
           distribution: 'temurin'
 
       - name: Make Maven Wrapper Executable
-        run: chmod +x mvnw
+        # We target the specific folder where mvnw lives
+        run: chmod +x ./spring-petclinic/mvnw
 
       - name: Build and Package
-        # Skips tests to bypass the Postgres/Docker dependency issues
+        # We tell Maven to run inside the subfolder
         run: ./mvnw clean verify -DskipTests
+        working-directory: ./spring-petclinic
 
       - name: Run SonarQube analysis
-        # Uses secrets for the URL and Token for security
+        # We run the scanner inside the subfolder so it finds the pom.xml
         run: ./mvnw sonar:sonar \
           -Dsonar.projectKey=Test-Project-Bala \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
           -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
           -DskipTests
+        working-directory: ./spring-petclinic
