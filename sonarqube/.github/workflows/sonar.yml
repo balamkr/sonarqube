@@ -22,14 +22,10 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
       
-      - name: Build and Package
+      - name: Build with Maven
         run: mvn clean verify -DskipTests
       
-      - name: Run SonarQube analysis
-        run: |
-          mvn sonar:sonar \
-            -Dsonar.projectKey=Test-Project-Bala \
-            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+      - name: SonarQube Scan
+        run: mvn sonar:sonar -Dsonar.projectKey=Test-Project-Bala -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} -Dsonar.token=${{ secrets.SONAR_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
