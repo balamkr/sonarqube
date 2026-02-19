@@ -4,6 +4,7 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -19,15 +20,17 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Build and test with Maven
+      - name: Make Maven Wrapper Executable
+        run: chmod +x mvnw
+
+      - name: Build and Package
+        # Skips tests to bypass the Postgres/Docker dependency issues
         run: ./mvnw clean verify -DskipTests
-        working-directory: ./spring-petclinic
 
       - name: Run SonarQube analysis
+        # Uses secrets for the URL and Token for security
         run: ./mvnw sonar:sonar \
           -Dsonar.projectKey=Test-Project-Bala \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-          -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+          -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
           -DskipTests
-        working-directory: ./spring-petclinic
-
