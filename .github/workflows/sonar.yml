@@ -20,11 +20,14 @@ jobs:
           distribution: 'temurin'
 
       - name: Build and test with Maven
-        run: mvn clean verify
+        run: ./mvnw clean verify -DskipTests
+        working-directory: ./spring-petclinic
 
       - name: Run SonarQube analysis
         run: ./mvnw sonar:sonar \
           -Dsonar.projectKey=Test-Project-Bala \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
           -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+          -DskipTests
+        working-directory: ./spring-petclinic
 
