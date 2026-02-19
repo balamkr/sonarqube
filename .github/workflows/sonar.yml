@@ -3,13 +3,10 @@ name: SonarQube Analysis
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out the repository
         uses: actions/checkout@v4
@@ -21,19 +18,15 @@ jobs:
           distribution: 'temurin'
 
       - name: Make Maven Wrapper Executable
-        # This targets the subfolder where your mvnw file lives
-        run: chmod +x ./spring-petclinic/mvnw
+        # Since mvnw is now in the root, we don't need the subfolder path
+        run: chmod +x mvnw
 
       - name: Build and Package
-        # Run inside the subfolder to find pom.xml
         run: ./mvnw clean verify -DskipTests
-        working-directory: ./spring-petclinic
 
       - name: Run SonarQube analysis
-        # Run inside the subfolder to find pom.xml
         run: ./mvnw sonar:sonar \
           -Dsonar.projectKey=Test-Project-Bala \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
           -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
           -DskipTests
-        working-directory: ./spring-petclinic
